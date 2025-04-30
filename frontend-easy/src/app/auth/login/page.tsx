@@ -4,7 +4,6 @@ import { FC } from "react";
 const Page: FC = () => {
   return (
     <div>
-      <p>hasibcwejf</p>
       <Login></Login>
     </div>
   );
