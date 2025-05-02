@@ -18,7 +18,6 @@ const Page: FC = () => {
       <Navbar />
       <Dashboard />
       <div className="max-w-screen-lg mx-auto flex flex-col md:flex-row items-start justify-center gap-6 px-4 py-8 mt-4 md:mt-15">
-        {/* GOLD */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
           <Cardgold />
           <div className="text-center py-4">
@@ -33,7 +32,6 @@ const Page: FC = () => {
                   BSI Hasanah Card Gold
                 </DialogTitle>
                 <div className="flex flex-col md:flex-row w-full">
-                  {/* Left Side */}
                   <div className="bg-[#00A39D] text-white px-6 md:w-1/2 flex flex-col justify-between">
                     <div className="mt-3">
                       <h2 className="text-lg font-semibold">Apa itu</h2>
@@ -49,7 +47,6 @@ const Page: FC = () => {
                       />
                     </div>
                   </div>
-                  {/* Right Side */}
                   <div className="bg-white text-black p-6 md:w-1/2">
                     <h2 className="text-xl font-bold mb-4">Gold</h2>
                     <ul className="space-y-2 text-sm">
@@ -84,7 +81,6 @@ const Page: FC = () => {
           </div>
         </div>
 
-        {/* PLATINUM */}
         <div className="w-full md:w-1/2 flex flex-col items-center">
           <Cardplatinum />
           <div className="text-center py-4">
@@ -99,7 +95,6 @@ const Page: FC = () => {
                   BSI Hasanah Card Platinum
                 </DialogTitle>
                 <div className="flex flex-col md:flex-row w-full">
-                  {/* Left Side */}
                   <div className="bg-[#00A39D] text-white px-6 md:w-1/2 flex flex-col justify-between">
                     <div className="mt-3">
                       <h2 className="text-lg font-semibold">Apa itu</h2>
@@ -115,7 +110,6 @@ const Page: FC = () => {
                       />
                     </div>
                   </div>
-                  {/* Right Side */}
                   <div className="bg-white text-black p-6 md:w-1/2">
                     <h2 className="text-xl font-bold mb-4">Platinum</h2>
                     <ul className="space-y-2 text-sm">
@@ -154,8 +148,6 @@ const Page: FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Button Ajukan */}
       <div className="text-center my-8">
         <a
           href="/ajukan"
