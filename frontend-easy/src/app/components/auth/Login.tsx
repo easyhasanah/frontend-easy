@@ -1,27 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import Image from "next/image";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Eye, EyeOff } from "lucide-react";
 import { PasswordInput } from "./PasswordInput";
 import { Label } from "@/components/ui/Label";
-
-// Schema validasi
-
-// Inisialisasi form dengan react-hook-form
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -33,25 +17,22 @@ export default function Login() {
   };
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      {/* Section Ilustrasi (Kiri) */}
-      <div className="flex flex-col items-center justify-center bg-teal-50 p-6 md:w-1/2">
-        <div className="max-w-md">
+      <div className="flex flex-col items-center justify-center bg-teal-50 p-6 md:w-2/3">
+        <div className="max-w-full">
           <Image
-            src="/image/ilustrasi_login.png"
+            src="/image/login_ilustration.svg"
             alt="Login Illustration"
-            width={500}
-            height={500}
+            width={800}
+            height={800}
             priority
             className="h-auto w-full"
           />
         </div>
       </div>
 
-      {/* Section Form Login (Kanan) */}
-      <div className="flex flex-col items-center justify-center p-6 md:w-1/2">
+      <div className="flex flex-col items-center justify-center p-6 md:w-1/3">
         <div className="w-full max-w-md space-y-8">
-          {/* Logo */}
-          <div className="flex justify-center">
+          <div className="mb-8 flex justify-center">
             <Image
               src="/image/Logo_EH.svg"
               alt="Easy Hasanah"
@@ -61,16 +42,16 @@ export default function Login() {
             />
           </div>
 
-          {/* Tagline */}
-          <div className="text-center text-teal-600">
+          <div className="mt-2 text-center text-teal-600 font-bold">
             <p>Lebih mudah, cepat, aman!</p>
           </div>
 
-          {/* Form Login */}
           <form>
             <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">Email</Label>
+              <div className="mb-6 flex flex-col space-y-1.5">
+                <Label htmlFor="email" className="mb-1 font-medium">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   placeholder=""
@@ -78,17 +59,25 @@ export default function Login() {
                   value={formData.email}
                 />
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="password">Password</Label>
+              <div className="mb-6 flex flex-col space-y-1.5">
+                <Label htmlFor="password" className="mb-1 font-medium">
+                  Kata Sandi
+                </Label>
                 <PasswordInput
                   id="password"
                   value={formData.password}
                   onChange={handleChange}
                   autoComplete="new-password"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  Lupa kata sandi?{" "}
+                  <a href="#" className="text-teal-600 hover:underline">
+                    Klik disini
+                  </a>
+                </p>
               </div>
-              <div className="flex justify-center">
-                <Button className="w-[200px] bg-teal-500 hover:bg-teal-600 px-6">
+              <div className="mt-8 flex justify-center">
+                <Button className="w-[200px] bg-teal-500 hover:bg-teal-600 px-6 font-semibold">
                   Masuk
                 </Button>
               </div>
