@@ -9,7 +9,7 @@ const Page: FC = () => {
     <>
       <Navbar></Navbar>
       <Dashboard></Dashboard>
-      <div className="flex justify-around">
+      <div className="max-w-screen-lg mx-auto flex flex-col md:flex-row items-center justify-center gap-6 px-4 py-8">
         <Cardgold></Cardgold>
         <Cardplatinum></Cardplatinum>
       </div>

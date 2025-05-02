@@ -109,7 +109,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden fixed h-[30vh] inset-0 z-10 bg-white pt-20 px-6">
+        <div className="md:hidden fixed h-[35vh] inset-0 z-10 bg-white pt-20 px-6">
           <div className="flex flex-col space-y-1">
             <Link
               href="/"
