@@ -77,7 +77,7 @@ export default function Login() {
                 </p>
               </div>
               <div className="mt-8 flex justify-center">
-                <Button className="w-[200px] bg-teal-500 hover:bg-teal-600 px-6 font-semibold">
+                <Button className="w-[200px] bg-[#1EA39D] hover:bg-teal-600 px-6 font-semibold">
                   Masuk
                 </Button>
               </div>
