@@ -16,8 +16,6 @@ export default function Dashboard() {
           className="h-auto mx-auto md:mx-0"
         />
       </div>
-
-      {/* Konten teks dan tombol */}
       <div className="max-w-xl flex-grow md:px-6 z-10 text-center md:text-left mx-auto">
         <h1 className="text-xl md:text-4xl font-bold mb-2">
           Lebih Untung dengan Hasanah Card BSI
@@ -32,8 +30,6 @@ export default function Dashboard() {
           Lihat semua promo disini <span className="ml-1">→</span>
         </Link>
       </div>
-
-      {/* Logo partner */}
       <div className="mb-6 md:mb-0">
         <Image
           src="/image/partner.svg"
