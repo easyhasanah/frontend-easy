@@ -169,7 +169,7 @@ const Form = () => {
         });
       }, 100);
 
-      if(submissionStore.limit_category == 0){
+      if(res.data.limit_category == 0){
         router.push("/form/failed")
       } else {
         router.push("/form/success")
