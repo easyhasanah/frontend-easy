@@ -26,11 +26,11 @@ jobs:
       run: npm uninstall react react-dom
       working-directory: ./frontend-easy
 
-    - name: Install React 18 (sesuai dengan kebutuhan react-axios dan radix-ui)
+    - name: Install React 18
       run: npm install react@^18.0.0 react-dom@^18.0.0
       working-directory: ./frontend-easy
 
-    - name: Install axios (versi yang dibutuhkan react-axios)
+    - name: Install correct axios version
       run: npm install axios@^0.27.2
       working-directory: ./frontend-easy
 
