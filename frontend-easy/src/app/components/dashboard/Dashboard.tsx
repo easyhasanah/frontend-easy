@@ -1,8 +1,38 @@
 "use client";
+import api from "@/lib/axios";
+import { useAuthStore } from "@/store/auth-store";
+import { useSubmissionStore } from "@/store/submission-store";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Dashboard() {
+  const submissionStore = useSubmissionStore()
+  const token = useAuthStore((auth) => auth.token);
+
+  const getSubmissionData = async () => {
+    try {
+      const res = await api.get(
+        'submissions',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      )
+
+      console.log("RES: ", res.data)
+      submissionStore.setSubmission(res.data)
+
+    } catch (error) {
+      console.error('error: ', error)
+    }
+  }
+
+  useEffect(() => {
+    getSubmissionData();
+  }, []);
+
   return (
     <div className="w-full px-4 relative overflow-hidden flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-[#1EA39D] to-[#F8AD3C]">
       <div className="mb-6 md:mb-0">

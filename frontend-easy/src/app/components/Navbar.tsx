@@ -95,7 +95,7 @@ export default function Navbar() {
         <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
           <Image src="/avatar.png" alt="User Avatar" width={40} height={40} />
         </div>
-        <div className="h-8 w-px bg-teal-500"></div>
+        <div className="h-8 w-px bg-[#1EA39D]"></div>
 
         <Link href="/logout">
           <Image

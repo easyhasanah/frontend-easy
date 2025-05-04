@@ -6,15 +6,39 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PasswordInput } from "./PasswordInput";
 import { Label } from "@/components/ui/Label";
+import { useRouter } from "next/navigation";
+import api from "@/lib/axios";
+import { useAuthStore } from "@/store/auth-store";
 
 export default function Login() {
+  const router = useRouter()
+  const authStore = useAuthStore()
+
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await api.post("/users/login", formData)
+
+      authStore.setToken(res.data.token)
+
+      router.push("/dashboard")
+
+    } catch (error) {
+      console.error('Error: ', error)
+    }
+
+  }
+
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
       <div className="flex flex-col items-center justify-center bg-teal-50 p-6 md:w-2/3">
@@ -46,17 +70,17 @@ export default function Login() {
             <p>Lebih mudah, cepat, aman!</p>
           </div>
 
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="grid w-full items-center gap-4">
               <div className="mb-6 flex flex-col space-y-1.5">
                 <Label htmlFor="email" className="mb-1 font-medium">
                   Email
                 </Label>
                 <Input
-                  id="email"
+                  id="username"
                   placeholder=""
                   onChange={handleChange}
-                  value={formData.email}
+                  value={formData.username}
                 />
               </div>
               <div className="mb-6 flex flex-col space-y-1.5">
@@ -77,7 +101,7 @@ export default function Login() {
                 </p>
               </div>
               <div className="mt-8 flex justify-center">
-                <Button className="w-[200px] bg-teal-500 hover:bg-teal-600 px-6 font-semibold">
+                <Button className="w-[200px] bg-[#1EA39D] hover:bg-teal-600 px-6 font-semibold">
                   Masuk
                 </Button>
               </div>
