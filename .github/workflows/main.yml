@@ -17,16 +17,20 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: "18.x" # Pastikan sesuai dengan versi di package.json
+        node-version: "18.x"
 
-    - name: Navigate to frontend directory
-      run: cd frontend-easy
+    - name: Downgrade to React 18
+      run: |
+        cd frontend-easy
+        npm install react@18 react-dom@18 --save
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./frontend-easy
 
     - name: Build Next.js App (skip lint)
       run: npm run build -- --no-lint
+      working-directory: ./frontend-easy
 
     - name: Stop existing frontend service (if any)
       run: |
@@ -40,19 +44,17 @@ jobs:
         sudo chown -R kelompok2:kelompok2 /home/kelompok2/frontend4/
         sudo chmod -R 755 /home/kelompok2/frontend4/
 
-    - name: Deploy build output to production directory
+    - name: Deploy source code to production directory
       run: |
-        echo "Deploying frontend build..."
+        echo "Deploying frontend code..."
         rm -rf /home/kelompok2/frontend4/*
-        cp -r ./frontend-easy/.next /home/kelompok2/frontend4/
-        cp -r ./frontend-easy/public /home/kelompok2/frontend4/
-        cp ./frontend-easy/package.json ./frontend-easy/package-lock.json /home/kelompok2/frontend4/ # Mungkin diperlukan
+        cp -r ./frontend-easy/. /home/kelompok2/frontend4/
 
-    - name: Install production dependencies on server (jika diperlukan)
+    - name: Install dependencies on server (again)
       run: |
-        echo "Running npm install --production on server directory..."
+        echo "Running npm install on server directory..."
         cd /home/kelompok2/frontend4
-        npm install --production
+        npm install
 
     - name: Restart frontend service
       run: |
