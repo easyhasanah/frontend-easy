@@ -2,9 +2,9 @@ name: Next.js Frontend Deployment
 
 on:
   push:
-    branches: [ "aldin-cb" ]
+    branches: [ "workflow" ]
   pull_request:
-    branches: [ "aldin-cb" ]
+    branches: [ "workflow" ]
 
 jobs:
   build-and-deploy:
@@ -18,6 +18,11 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: "18.x"
+
+    - name: Downgrade to React 18
+      run: |
+        cd frontend-easy
+        npm install react@18 react-dom@18 --save
 
     - name: Install dependencies
       run: npm install
