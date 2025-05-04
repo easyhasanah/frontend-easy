@@ -5,7 +5,6 @@ import Link from "next/link";
 export default function Dashboard() {
   return (
     <div className="w-full px-4 relative overflow-hidden flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-[#1EA39D] to-[#F8AD3C]">
-      {/* Asset kiri */}
       <div className="mb-6 md:mb-0">
         <Image
           src="/image/asset_dashboard.svg"
