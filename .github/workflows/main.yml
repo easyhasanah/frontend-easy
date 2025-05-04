@@ -52,7 +52,7 @@ jobs:
 
     - name: Stop existing frontend service (if any)
       run: |
-        echo "Stopping existing frontend service..."
+        echo "Stopping existing frontend service...."
         sudo systemctl stop easy-frontend.service || true
         sleep 3
 
