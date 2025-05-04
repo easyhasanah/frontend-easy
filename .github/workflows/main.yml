@@ -2,9 +2,9 @@ name: Next.js Frontend Deployment
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "new" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "new" ]
 
 jobs:
   build-and-deploy:
