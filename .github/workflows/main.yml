@@ -28,41 +28,42 @@ jobs:
       run: npm install
       working-directory: ./frontend-easy
 
-    - name: Build Next.js App (skip ESLint)
+    - name: Build Next.js App (skip lint)
       run: npm run build -- --no-lint
       working-directory: ./frontend-easy
 
-    - name: Stop existing frontend service (if any)
+    - name: Stop frontend service (systemd)
       run: |
         echo "Stopping existing frontend service..."
-        pkill -f "node /home/kelompok2/frontend4/.next/standalone/server.js" || true
-        sleep 5
+        sudo systemctl stop easy-frontend.service || true
 
-    - name: Adjust permissions for production directory
+    - name: Adjust directory permissions
       run: |
-        echo "Adjusting permissions for /home/kelompok2/frontend4/"
+        echo "Adjusting permissions..."
         sudo chown -R kelompok2:kelompok2 /home/kelompok2/frontend4/
         sudo chmod -R 755 /home/kelompok2/frontend4/
 
-    - name: Deploy build output
+    - name: Deploy build output to server
       run: |
-        echo "Deploying frontend build..."
+        echo "Deploying built output..."
         rm -rf /home/kelompok2/frontend4/*
-        cp -r ./frontend-easy/. /home/kelompok2/frontend4/
+        cp -r ./frontend-easy/.next /home/kelompok2/frontend4/
+        cp -r ./frontend-easy/public /home/kelompok2/frontend4/
+        cp ./frontend-easy/package.json /home/kelompok2/frontend4/
+        cp ./frontend-easy/package-lock.json /home/kelompok2/frontend4/
+        cp ./frontend-easy/next.config.ts /home/kelompok2/frontend4/
 
-    - name: Start frontend server
+    - name: Restart frontend service (systemd)
       run: |
-        echo "Starting frontend app..."
-        cd /home/kelompok2/frontend4/
-        nohup npm start &
+        echo "Restarting easy-frontend.service..."
+        sudo systemctl start easy-frontend.service
+        sleep 5
 
-    - name: Check frontend app status
+    - name: Check frontend app
       run: |
-        echo "Checking frontend status..."
         curl http://192.168.23.50:3000 || true
 
     - name: Show frontend log on failure
       if: failure()
       run: |
-        echo "--- Frontend Log (if available) ---"
-        tail -n 50 /home/kelompok2/frontend4/log.txt || true
+        journalctl -u easy-frontend.service --no-pager -n 50 || true
