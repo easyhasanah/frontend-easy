@@ -74,7 +74,7 @@ const Form = () => {
     formData.append("file", fileToProcess);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/submissions/read_pdf", {
+      const response = await fetch("http://192.168.23.50:8000/api/submissions/read_pdf", {
         method: "POST",
         body: formData,
       });
