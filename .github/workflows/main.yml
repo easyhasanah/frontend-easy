@@ -22,6 +22,14 @@ jobs:
     - name: Navigate to frontend directory
       run: cd frontend-easy
 
+    - name: Clean npm cache
+      run: npm cache clean --force
+      working-directory: ./frontend-easy
+
+    - name: Remove node_modules and package-lock.json
+      run: rm -rf node_modules package-lock.json
+      working-directory: ./frontend-easy
+
     - name: Uninstall react and react-dom
       run: npm uninstall react react-dom
       working-directory: ./frontend-easy
