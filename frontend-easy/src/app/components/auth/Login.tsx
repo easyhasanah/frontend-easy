@@ -11,8 +11,8 @@ import api from "@/lib/axios";
 import { useAuthStore } from "@/store/auth-store";
 
 export default function Login() {
-  const router = useRouter()
-  const authStore = useAuthStore()
+  const router = useRouter();
+  const authStore = useAuthStore();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -27,17 +27,15 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await api.post("/users/login", formData)
+      const res = await api.post("/users/login", formData);
 
-      authStore.setToken(res.data.token)
+      authStore.setToken(res.data.token);
 
-      router.push("/dashboard")
-
+      router.push("/dashboard");
     } catch (error) {
-      console.error('Error: ', error)
+      console.error("Error: ", error);
     }
-
-  }
+  };
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">

@@ -2,11 +2,20 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 export default function Navbar() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const handleLogout = () => {
+    localStorage.removeItem("auth-store");
+    localStorage.removeItem("card-store");
+    localStorage.removeItem("submission-store");
+
+    router.push("/");
+  };
 
   // mobile menu
   useEffect(() => {
@@ -73,7 +82,7 @@ export default function Navbar() {
 
       <div className="hidden md:flex items-center space-x-4">
         <Link
-          href="/"
+          href="/dashboard"
           className={`text-lg ${
             pathname === "/"
               ? "text-teal-500 font-medium"
@@ -97,14 +106,17 @@ export default function Navbar() {
         </div>
         <div className="h-8 w-px bg-[#1EA39D]"></div>
 
-        <Link href="/logout">
+        <Button
+          className="bg-transparant hover:bg-transparant"
+          onClick={handleLogout}
+        >
           <Image
             src="/image/logout_icon.svg"
             alt="Logout"
             width={20}
             height={20}
           />
-        </Link>
+        </Button>
       </div>
 
       {/* Mobile Menu */}
@@ -149,14 +161,17 @@ export default function Navbar() {
                 <span className="text-sm text-gray-700">User Profile</span>
               </div>
 
-              <Link href="/logout" className="text-red-500">
+              <Button
+                className="bg-transparant hover:bg-transparant"
+                onClick={handleLogout}
+              >
                 <Image
                   src="/image/logout_icon.svg"
                   alt="Logout"
                   width={20}
                   height={20}
                 />
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

@@ -2,8 +2,21 @@
 
 import { Button } from "@/components/ui/Button";
 import { Phone } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth-store";
 
 const PinSuccess = () => {
+  const router = useRouter();
+  const token = useAuthStore((auth) => auth.token); // Ambil token
+
+  const handleClick = () => {
+    if (token) {
+      router.push("/dashboard");
+    } else {
+      alert("Token tidak ditemukan. Silakan login ulang.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4 md:h-40">
       <div className="max-w-2xl w-full p-6 bg-[#ebf7f6] shadow-md rounded-lg text-center">
@@ -14,7 +27,10 @@ const PinSuccess = () => {
         <p className="text-sm md:text-base text-gray-800 mb-1">
           Alhamdulillah, Hasanah Card Anda Sudah dapat digunakan untuk transaksi
         </p>
-        <Button className="bg-[#1EA39D] hover:cursor-pointer hover:bg-teal-600 text-white px-8 py-2 mb-3">
+        <Button
+          onClick={handleClick}
+          className="bg-[#1EA39D] hover:cursor-pointer hover:bg-teal-600 text-white px-8 py-2 mb-3"
+        >
           OK
         </Button>
 

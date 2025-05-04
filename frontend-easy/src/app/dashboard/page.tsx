@@ -5,6 +5,7 @@ import Navbar from "@/app/components/Navbar";
 import Dashboard from "@/app/components/dashboard/Dashboard";
 import Cardgold from "@/app/components/card/Cardgold";
 import Cardplatinum from "@/app/components/card/Cardplatinum";
+import Image from "next/image";
 import {
   Dialog,
   DialogContent,
@@ -40,10 +41,13 @@ const Page: FC = () => {
                       </h1>
                     </div>
                     <div className="mt-6">
-                      <img
+                      <Image
                         src="/image/info_gold.svg"
                         alt="Kartu BSI Gold"
-                        className="w-50 mx-auto"
+                        width={200} // ganti sesuai kebutuhan
+                        height={100} // ganti sesuai kebutuhan
+                        className="mx-auto h-auto"
+                        priority
                       />
                     </div>
                   </div>
@@ -103,10 +107,13 @@ const Page: FC = () => {
                       </h1>
                     </div>
                     <div className="mt-6">
-                      <img
+                      <Image
                         src="/image/info_platinum.svg"
                         alt="Kartu BSI Platinum"
-                        className="w-40 mx-auto"
+                        width={160} // setara dengan w-40 (40 * 4 = 160px)
+                        height={100} // bisa disesuaikan, h-auto menjaga proporsi
+                        className="mx-auto h-auto"
+                        priority
                       />
                     </div>
                   </div>

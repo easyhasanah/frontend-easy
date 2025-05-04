@@ -7,34 +7,30 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Dashboard() {
-  const submissionStore = useSubmissionStore()
+  const submissionStore = useSubmissionStore();
   const token = useAuthStore((auth) => auth.token);
 
   const getSubmissionData = async () => {
     try {
-      const res = await api.get(
-        'submissions',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        }
-      )
+      const res = await api.get("submissions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      console.log("RES: ", res.data)
-      submissionStore.setSubmission(res.data)
-
+      console.log("RES: ", res.data);
+      submissionStore.setSubmission(res.data);
     } catch (error) {
-      console.error('error: ', error)
+      console.error("error: ", error);
     }
-  }
+  };
 
   useEffect(() => {
     getSubmissionData();
   }, []);
 
   return (
-    <div className="w-full px-4 relative overflow-hidden flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-[#1EA39D] to-[#F8AD3C]">
+    <div className="w-full px-4 relative overflow-hidden flex flex-col md:flex-row justify-between items-center bg-gradient-to-r from-[#ACD0BE] to-[#FFF0DB]">
       <div className="mb-6 md:mb-0">
         <Image
           src="/image/asset_dashboard.svg"

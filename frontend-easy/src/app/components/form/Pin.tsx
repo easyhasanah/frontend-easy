@@ -3,16 +3,23 @@
 import {
   useState,
   useRef,
+  useEffect,
+  ChangeEvent,
   KeyboardEvent,
   ClipboardEvent,
-  ChangeEvent,
-  useEffect,
 } from "react";
+import api from "@/lib/axios";
+import { useAuthStore } from "@/store/auth-store";
+import { useRouter } from "next/navigation";
 
 const PinInput = () => {
   const [pin, setPin] = useState<string[]>(Array(6).fill(""));
   const [confirmPin, setConfirmPin] = useState<string[]>(Array(6).fill(""));
   const [isPinMatch, setIsPinMatch] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const token = useAuthStore((auth) => auth.token);
 
   const pinRefs = useRef<(HTMLInputElement | null)[]>([]);
   const confirmPinRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -72,15 +79,9 @@ const PinInput = () => {
 
     if (e.key === "Backspace") {
       if (inputValues[index]) {
-        if (isConfirm) {
-          const newConfirmPin = [...confirmPin];
-          newConfirmPin[index] = "";
-          setConfirmPin(newConfirmPin);
-        } else {
-          const newPin = [...pin];
-          newPin[index] = "";
-          setPin(newPin);
-        }
+        const newInput = [...inputValues];
+        newInput[index] = "";
+        isConfirm ? setConfirmPin(newInput) : setPin(newInput);
       } else if (index > 0) {
         inputRefs.current[index - 1]?.focus();
       }
@@ -107,43 +108,50 @@ const PinInput = () => {
 
     const digits = pasteData.split("").slice(0, 6 - index);
 
-    if (isConfirm) {
-      const newConfirmPin = [...confirmPin];
-
-      digits.forEach((digit, i) => {
-        const targetIndex = index + i;
-        if (targetIndex < 6) {
-          newConfirmPin[targetIndex] = digit;
-        }
-      });
-
-      setConfirmPin(newConfirmPin);
-      const nextIndex = Math.min(index + digits.length, 5);
-      confirmPinRefs.current[nextIndex]?.focus();
-    } else {
-      const newPin = [...pin];
-
-      digits.forEach((digit, i) => {
-        const targetIndex = index + i;
-        if (targetIndex < 6) {
-          newPin[targetIndex] = digit;
-        }
-      });
-
-      setPin(newPin);
-
-      const nextIndex = Math.min(index + digits.length, 5);
-      pinRefs.current[nextIndex]?.focus();
-
-      if (index + digits.length >= 6) {
-        confirmPinRefs.current[0]?.focus();
+    const update = isConfirm ? [...confirmPin] : [...pin];
+    digits.forEach((digit, i) => {
+      const targetIndex = index + i;
+      if (targetIndex < 6) {
+        update[targetIndex] = digit;
       }
+    });
+
+    isConfirm ? setConfirmPin(update) : setPin(update);
+
+    const nextIndex = Math.min(index + digits.length, 5);
+    (isConfirm ? confirmPinRefs : pinRefs).current[nextIndex]?.focus();
+
+    if (!isConfirm && index + digits.length >= 6) {
+      confirmPinRefs.current[0]?.focus();
     }
   };
 
-  const handleSubmit = () => {
-    if (pin.join("") === confirmPin.join("")) {
-      alert("PIN berhasil dibuat!");
+  const handleSubmit = async () => {
+    const pinValue = pin.join("");
+
+    if (pinValue === confirmPin.join("")) {
+      try {
+        setLoading(true);
+        const response = await api.post(
+          "/card/",
+          { pin: pinValue },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        alert("PIN berhasil dibuat!");
+        router.push("/form/pin/success");
+      } catch (error: any) {
+        if (error.response) {
+          alert(error.response.data.detail || "Gagal membuat PIN.");
+        } else {
+          alert("Terjadi kesalahan jaringan.");
+        }
+      } finally {
+        setLoading(false);
+      }
     } else {
       setIsPinMatch(false);
       setConfirmPin(Array(6).fill(""));
@@ -218,14 +226,14 @@ const PinInput = () => {
         <div className="flex justify-center">
           <button
             onClick={handleSubmit}
-            disabled={!isComplete || isPinMatch === false}
+            disabled={!isComplete || isPinMatch === false || loading}
             className={`px-6 py-2 rounded font-medium text-white ${
-              isComplete && isPinMatch !== false
+              isComplete && isPinMatch !== false && !loading
                 ? "bg-[#00A39D] hover:bg-[#008f89]"
                 : "bg-gray-300 cursor-not-allowed"
             }`}
           >
-            Buat
+            {loading ? "Menyimpan..." : "Buat"}
           </button>
         </div>
       </div>
