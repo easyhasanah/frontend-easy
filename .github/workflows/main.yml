@@ -21,8 +21,8 @@ jobs:
 
     - name: Downgrade to React 18
       run: |
-        cd frontend-easy
-        npm install react@18 react-dom@18 --save
+        npm install
+      working-directory: ./frontend-easy
 
     - name: Install dependencies
       run: npm install
