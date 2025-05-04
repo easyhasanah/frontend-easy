@@ -2,12 +2,14 @@
 import api from "@/lib/axios";
 import { useAuthStore } from "@/store/auth-store";
 import { useSubmissionStore } from "@/store/submission-store";
+import { useUserStore } from "@/store/user-store";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Dashboard() {
   const submissionStore = useSubmissionStore()
+  const userStore = useUserStore()
   const token = useAuthStore((auth) => auth.token);
 
   const getSubmissionData = async () => {
@@ -21,8 +23,25 @@ export default function Dashboard() {
         }
       )
 
-      console.log("RES: ", res.data)
+      const resUser = await api.get(
+        'users',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      )
+
       submissionStore.setSubmission(res.data)
+      userStore.setUsername(resUser.data.username)
+
+      console.log("RES: ", res.data)
+      console.log("RES USER: ", resUser.data)
+
+      userStore.setName(resUser.data.name)
+      userStore.setNik(res.data.nik)
+      userStore.setCif(res.data.nik)
+      
 
     } catch (error) {
       console.error('error: ', error)

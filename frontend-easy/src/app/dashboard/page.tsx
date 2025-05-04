@@ -11,8 +11,15 @@ import {
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/Dialog";
+import { useRouter } from "next/navigation";
 
 const Page: FC = () => {
+  const router = useRouter()
+
+  const toFormClick = () => {
+    router.push("/form")
+  }
+
   return (
     <>
       <Navbar />
@@ -150,7 +157,7 @@ const Page: FC = () => {
       </div>
       <div className="text-center my-8">
         <a
-          href="/ajukan"
+          href="/form/initial"
           className="bg-[#00A39D] text-white font-bold py-3 px-8 rounded hover:bg-[#008880] transition-colors"
         >
           Ajukan Sekarang
