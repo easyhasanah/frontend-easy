@@ -133,7 +133,7 @@ const PinInput = () => {
       try {
         setLoading(true);
         const response = await api.post(
-          "/card/",
+          "/card/pin",
           { pin: pinValue },
           {
             headers: {

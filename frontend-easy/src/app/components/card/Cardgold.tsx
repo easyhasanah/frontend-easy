@@ -6,9 +6,11 @@ import { useAuthStore } from "@/store/auth-store";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useCardStore } from "@/store/card-store";
+import { useUserStore } from "@/store/user-store";
 export default function Cardgold() {
   const [isVisible, setIsVisible] = useState(false);
   const cardStore = useCardStore();
+  const userStore = useUserStore();
   const token = useAuthStore((auth) => auth.token);
 
   const getCardData = async () => {
@@ -48,12 +50,14 @@ export default function Cardgold() {
       ? cardStore.expired_date
       : new Date(cardStore.expired_date);
 
+  // Pastikan expiredDate adalah valid tanggal
   const expString = expiredDate
     ? `${(expiredDate.getMonth() + 1).toString().padStart(2, "0")}/${expiredDate
         .getFullYear()
         .toString()
         .slice(-2)}`
     : "00/00";
+
   const formatCardNumber = (num: string) =>
     num
       .replace(/\D/g, "")
@@ -84,7 +88,7 @@ export default function Cardgold() {
         </div>
 
         <div className="text-white/90 font-medium mb-2">
-          <span className="py-1">Muhammad</span>
+          <span className="py-1">{userStore.name}</span>
         </div>
 
         <div className="flex items-center space-x-2 tracking-widest mb-2">
