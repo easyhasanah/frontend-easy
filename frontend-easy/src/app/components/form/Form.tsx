@@ -4,11 +4,28 @@ import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
-import { useState } from "react";
+import api from "@/lib/axios";
+import { useAuthStore } from "@/store/auth-store";
+import { useSubmissionStore } from "@/store/submission-store";
+import { useUserStore } from "@/store/user-store";
+import { useRouter } from "next/navigation";
+import { useState, useRef } from "react";
 
 const Form = () => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [predictLoading, setPredictLoading] = useState(false);
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [predictionResult, setPredictionResult] = useState<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const token = useAuthStore((state) => (state.token))
+  const router = useRouter()
+
+  const submissionStore = useSubmissionStore()
+  const userStore = useUserStore()
   
   const handleCheckboxClick = () => {
     if (!termsAccepted) {
@@ -18,9 +35,144 @@ const Form = () => {
     }
   };
 
-  const handleAcceptTerms = () => {
+  const handleAcceptTerms = (e: React.MouseEvent) => {
     setTermsAccepted(true);
     setIsTermsModalOpen(false);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+
+      // Automatically process the file after selection
+      if (selectedFile) {
+        await processFile(selectedFile);
+      }
+    }
+  };
+
+  const processFile = async (fileToProcess: File) => {
+    if (!fileToProcess) {
+      alert("Silakan pilih file terlebih dahulu");
+      return;
+    }
+
+    if (fileToProcess.type !== "application/pdf") {
+      alert("Hanya file PDF yang diperbolehkan");
+      return;
+    }
+
+    if (fileToProcess.size > 10 * 1024 * 1024) { // 10MB in bytes
+      alert("Ukuran file melebihi 10MB");
+      return;
+    }
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", fileToProcess);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/submissions/read_pdf", {
+        method: "POST",
+        body: formData,
+      });
+
+      // const res = await api.post("submissions/read_pdf")
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const income = await response.json();
+      setTotalIncome(income);
+      submissionStore.setTotalIncome(income); // Assuming you have this function in your store
+      alert("Berhasil mengunggah file dan memperbarui penghasilan");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Gagal mengunggah file. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePredictCategory = async () => {
+    if (!file) {
+      alert("Silakan pilih file terlebih dahulu");
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert("Silakan setujui syarat dan ketentuan terlebih dahulu");
+      return;
+    }
+
+    setPredictLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      // const response = await fetch("http://127.0.0.1:8000/api/submissions/predict_category", {
+      //   method: "POST",
+      //   body: formData,
+      //   headers: {
+      //     // Include authorization if your API requires it
+      //     "Authorization": `Bearer ${token}`
+      //   },
+      // });
+
+      const res = await api.post("/submissions/predict", formData,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      )
+
+      console.log("RES PREDICT: ", res.data)
+
+      submissionStore.setCreditCardCategory(res.data.limit_category)
+      submissionStore.setStatusPengajuan(res.data.rejection_reason)
+      submissionStore.setTotalIncome(res.data.total_income)
+
+      // if (!response.ok) {
+      //   throw new Error(`Error: ${response.status}`);
+      // }
+
+      // const result = await response.json();
+      // setPredictionResult(result);
+
+      // Optionally update your store with the prediction results
+      // if (submissionStore.setStatusPengajuan) {
+      //   submissionStore.setStatusPengajuan(result.rejection_reason);
+      // }
+
+      // Scroll to the results section
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
+
+      if(submissionStore.limit_category == 0){
+        router.push("/form/failed")
+      } else {
+        router.push("/form/success")
+      }
+
+    } catch (error) {
+      console.error("Error predicting category:", error);
+      alert("Gagal melakukan prediksi kategori. Silakan coba lagi.");
+    } finally {
+      setPredictLoading(false);
+    }
+  };
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -32,7 +184,7 @@ const Form = () => {
           </h1>
 
           <div className="max-w-4xl mx-auto">
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -42,7 +194,7 @@ const Form = () => {
                     >
                       CIF
                     </label>
-                    <Input id="cif" placeholder="19702001513456" />
+                    <Input disabled id="cif" placeholder="19702001513456" value={userStore.cif} />
                   </div>
                   <div>
                     <label
@@ -51,7 +203,7 @@ const Form = () => {
                     >
                       NIK
                     </label>
-                    <Input id="nik" placeholder="19702001513456" />
+                    <Input disabled id="nik" placeholder="19702001513456" value={userStore.nik} />
                   </div>
                   <div>
                     <label
@@ -60,7 +212,7 @@ const Form = () => {
                     >
                       Nama
                     </label>
-                    <Input id="nama" placeholder="Lorem Ipsum" />
+                    <Input disabled id="nama" placeholder="Lorem Ipsum" value={userStore.name} />
                   </div>
                   <div>
                     <label
@@ -69,7 +221,7 @@ const Form = () => {
                     >
                       Umur
                     </label>
-                    <Input id="umur" placeholder="Lorem Ipsum" />
+                    <Input disabled id="umur" placeholder="Lorem Ipsum" value={submissionStore.applicant_age} />
                   </div>
                   <div>
                     <label
@@ -78,7 +230,7 @@ const Form = () => {
                     >
                       Jumlah Anak
                     </label>
-                    <Input id="jumlahAnak" placeholder="Lorem Ipsum" />
+                    <Input disabled id="jumlahAnak" placeholder="Lorem Ipsum" value={submissionStore.total_children} />
                   </div>
                   <div>
                     <label
@@ -87,7 +239,7 @@ const Form = () => {
                     >
                       Lama Bekerja
                     </label>
-                    <Input id="lamaBekerja" placeholder="Lorem Ipsum" />
+                    <Input disabled id="lamaBekerja" placeholder="Lorem Ipsum" value={submissionStore.years_of_working} />
                   </div>
                 </div>
 
@@ -100,8 +252,10 @@ const Form = () => {
                       Total Hutang Konsumtif
                     </label>
                     <Input
+                      disabled
                       id="totalHutangKonsumtif"
                       placeholder="Lorem Ipsum"
+                      value={submissionStore.total_bad_debt}
                     />
                   </div>
                   <div>
@@ -112,8 +266,10 @@ const Form = () => {
                       Total Hutang Produktif
                     </label>
                     <Input
+                      disabled
                       id="totalHutangProduktif"
                       placeholder="Lorem Ipsum"
+                      value={submissionStore.total_good_debt}
                     />
                   </div>
                   <div>
@@ -123,7 +279,14 @@ const Form = () => {
                     >
                       Jenis Penghasilan
                     </label>
-                    <Input id="jenisPenghasilan" placeholder="Lorem Ipsum" />
+                    <Input disabled id="jenisPenghasilan" placeholder="Lorem Ipsum" 
+                    value={
+                      submissionStore.income_type_commercial_associate ? 'Wiraswasta'
+                      : submissionStore.income_type_pensioner ? "Pensiunan"
+                      : submissionStore.income_type_state_servant ? "PNS"
+                      : submissionStore.income_type_student ? "Pelajar"
+                      : "Pegawai" 
+                    } />
                   </div>
                   <div>
                     <label
@@ -132,7 +295,13 @@ const Form = () => {
                     >
                       Status Perkawinan
                     </label>
-                    <Input id="statusPerkawinan" placeholder="Lorem Ipsum" />
+                    <Input disabled id="statusPerkawinan" placeholder="Lorem Ipsum" 
+                    value={
+                      submissionStore.family_status_married ? "Menikah"
+                      : submissionStore.family_status_separated ? "Cerai"
+                      : submissionStore.family_status_single ? "Belum Kawin"
+                      : "Duda atau Janda"
+                    }/>
                   </div>
                   <div>
                     <label
@@ -141,16 +310,25 @@ const Form = () => {
                     >
                       Jenis Tempat Tinggal
                     </label>
-                    <Input id="jenisTempat" placeholder="Lorem Ipsum" />
+                    <Input disabled id="jenisTempat" placeholder="Lorem Ipsum" 
+                    value={
+                      submissionStore.housing_type_co_op_apartment ? "Apartemen Milik Bersama"
+                      : submissionStore.housing_type_house_apartment ? "Tempat Tinggal Pribadi"
+                      : submissionStore.housing_type_municipal_apartment ? "Rumah Susun"
+                      : submissionStore.housing_type_office_apartment ? "Mess"
+                      : submissionStore.housing_type_rented_apartment ? "Apartemen Sewa"
+                      : "Tinggal Bersama Orang Tua"
+                    }/>
                   </div>
                   <div>
                     <label
-                      htmlFor="totalPemasukan"
+                      htmlFor="totalIncome"
                       className="block text-sm font-medium mb-1"
                     >
-                      Total Pemasukan dalam 1 Tahun
+                      Jumlah Penghasilan Pertahun
                     </label>
-                    <Input id="totalPemasukan" placeholder="Rp64.000.000,00" />
+                    <Input disabled id="totalIncome" placeholder="Lorem Ipsum" 
+                    value={totalIncome ? `Rp ${totalIncome.toLocaleString('id-ID')}` : "Rp 0"}/>
                   </div>
                 </div>
               </div>
@@ -163,13 +341,26 @@ const Form = () => {
                   Bukti Potong Pajak
                 </label>
                 <div className="flex">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="application/pdf"
+                    className="hidden"
+                  />
                   <Input
                     id="fileUpload"
-                    placeholder="Lorem Ipsum"
-                    className="rounded-r-none flex-grow"
+                    onClick={handleBrowseClick}
+                    readOnly
+                    value={file ? file.name : ""}
+                    placeholder="Pilih file PDF"
+                    className="rounded-r-none flex-grow cursor-pointer"
                   />
-                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-l-none">
-                    UNGGAH FILE
+                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-l-none" 
+                     onClick={handleBrowseClick}
+                     disabled={loading}
+                  >
+                    {loading ? "MEMPROSES..." : "UNGGAH FILE"}
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
@@ -200,7 +391,8 @@ const Form = () => {
               <div className="mt-8 flex justify-center">
                 <Button
                   className="bg-[#1EA39D] hover:bg-teal-600 text-white w-full md:w-1/3"
-                  disabled={!termsAccepted}
+                  disabled={!termsAccepted || !totalIncome || predictLoading}
+                  onClick={handlePredictCategory}
                 >
                   Ajukan
                 </Button>

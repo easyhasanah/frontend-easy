@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
   
 type SubmissionStore = {
     applicant_age: number,
-    credit_card_category: number,
+    limit_category: number,
     family_status_married: number,
     family_status_separated: number,
     family_status_single: number,
@@ -19,21 +19,21 @@ type SubmissionStore = {
     income_type_state_servant: number,
     income_type_student: number,
     income_type_working: number,
-    status_pengajuan: string,
+    rejection_reason: string,
     total_bad_debt: number,
     total_children: number,
     total_good_debt: number,
     total_income: number,
     years_of_working: number
     setSubmission: (store: SubmissionStore) => void,
-    setStatusPengajuan: (status_pengajuan: string) => void,
+    setStatusPengajuan: (rejection_reason: string) => void,
     setTotalIncome: (total_income: number) => void,
-    setCreditCardCategory: (credit_card_category: number) => void
+    setCreditCardCategory: (limit_category: number) => void
 };
 
 const initialState = {
     applicant_age: 0,
-    credit_card_category: 0,
+    limit_category: 0,
     family_status_married: 0,
     family_status_separated: 0,
     family_status_single: 0,
@@ -49,7 +49,7 @@ const initialState = {
     income_type_state_servant: 0,
     income_type_student: 0,
     income_type_working: 0,
-    status_pengajuan: '',
+    rejection_reason: '',
     total_bad_debt: 0,
     total_children: 0,
     total_good_debt: 0,
@@ -62,9 +62,9 @@ export const useSubmissionStore = create<SubmissionStore>()(
         (set) => ({
             ...initialState,
             setSubmission: (store) => set(store),
-            setStatusPengajuan: (status_pengajuan) => set({status_pengajuan}),
+            setStatusPengajuan: (rejection_reason) => set({rejection_reason}),
             setTotalIncome: (total_income) => set({total_income}),
-            setCreditCardCategory: (credit_card_category) => set({credit_card_category}),
+            setCreditCardCategory: (limit_category) => set({limit_category}),
         }),
         { name: 'submission-store'}
     )

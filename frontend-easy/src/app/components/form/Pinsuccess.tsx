@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/auth-store";
 
 const PinSuccess = () => {
   const router = useRouter();
-  const token = useAuthStore((auth) => auth.token); // Ambil token
+  const token = useAuthStore((auth) => auth.token);
 
   const handleClick = () => {
     if (token) {
