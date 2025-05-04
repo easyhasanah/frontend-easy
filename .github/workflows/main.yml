@@ -29,7 +29,7 @@ jobs:
       working-directory: ./frontend-easy
 
     - name: Build Next.js App (skip ESLint)
-      run: npm run build -- --no-eslint
+      run: npm run build -- --no-lint
       working-directory: ./frontend-easy
 
     - name: Stop existing frontend service (if any)
