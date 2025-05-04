@@ -2,9 +2,9 @@ name: Next.js Frontend Deployment
 
 on:
   push:
-    branches: [ "workflow" ]
+    branches: [ "aldin-cb" ]
   pull_request:
-    branches: [ "workflow" ]
+    branches: [ "aldin-cb" ]
 
 jobs:
   build-and-deploy:
