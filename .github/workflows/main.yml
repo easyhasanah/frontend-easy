@@ -30,19 +30,19 @@ jobs:
       run: rm -rf node_modules package-lock.json
       working-directory: ./frontend-easy
 
-    - name: Uninstall react and react-dom
+    - name: Uninstall react and react-dom (ensure clean slate)
       run: npm uninstall react react-dom
       working-directory: ./frontend-easy
 
-    - name: Install React 18
+    - name: Install React 18 and react-dom
       run: npm install react@^18.0.0 react-dom@^18.0.0
       working-directory: ./frontend-easy
 
-    - name: Install correct axios version
+    - name: Install axios (required by react-axios)
       run: npm install axios@^0.27.2
       working-directory: ./frontend-easy
 
-    - name: Install dependencies lainnya
+    - name: Install other dependencies
       run: npm install
       working-directory: ./frontend-easy
 
