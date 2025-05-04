@@ -137,6 +137,18 @@ const Form = () => {
       submissionStore.setStatusPengajuan(res.data.rejection_reason)
       submissionStore.setTotalIncome(res.data.total_income)
 
+      const reqCardJson = {
+        limit_category: res.data.limit_category
+      };
+
+      const resAddCard = await api.post("/card/", reqCardJson, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+
+      console.log("RES ADD CARD: ", resAddCard.data)
+
       // if (!response.ok) {
       //   throw new Error(`Error: ${response.status}`);
       // }
