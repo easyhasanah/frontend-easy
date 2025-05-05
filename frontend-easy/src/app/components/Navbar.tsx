@@ -121,7 +121,7 @@ export default function Navbar() {
         <div className="h-8 w-px bg-[#1EA39D]"></div>
 
         <Button
-          className="bg-transparant hover:bg-transparant"
+          className="p-0 m-0 bg-transparent hover:bg-transparant border-none"
           onClick={handleLogout}
         >
           <Image
@@ -176,7 +176,7 @@ export default function Navbar() {
               </div>
 
               <Button
-                className="bg-transparant hover:bg-transparant"
+                className="p-0 m-0 bg-transparent hover:bg-transparant border-none"
                 onClick={handleLogout}
               >
                 <Image

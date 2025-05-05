@@ -18,27 +18,27 @@ import { useAuthStore } from "@/store/auth-store";
 import Tracker from "../components/tracker/Tracker";
 
 const Page: FC = () => {
-  const router = useRouter()
-  const token = useAuthStore((token) => (token.token))
-  const [cardCategory, setCardCategory] = useState(0)
+  const router = useRouter();
+  const token = useAuthStore((token) => token.token);
+  const [cardCategory, setCardCategory] = useState(0);
 
   const getCardCategory = async () => {
     try {
       const res = await api.get("card", {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
-      })
+        },
+      });
 
-      setCardCategory(res?.data?.card_category_id ?? 0)
-    } catch(error) {
-      console.error('error: ', error)
+      setCardCategory(res?.data?.card_category_id ?? 0);
+    } catch (error) {
+      console.error("error: ", error);
     }
-  }
+  };
 
   const toFormClick = () => {
-    router.push("/form")
-  }
+    router.push("/form");
+  };
 
   useEffect(() => {
     getCardCategory();
@@ -47,13 +47,12 @@ const Page: FC = () => {
   return (
     <>
       <Navbar />
-      {cardCategory === 0 
-      ? <>
+      {cardCategory === 0 ? (
+        <>
           <Dashboard />
           <div className="max-w-screen-lg mx-auto flex flex-col md:flex-row items-start justify-center gap-6 px-4 py-8 mt-4 md:mt-15">
             <div className="w-full md:w-1/2 flex flex-col items-center">
-              {/* <Cardgold /> */}
-              <p>Kartu Gold</p>
+              <Cardgold />
               <div className="text-center py-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -107,8 +106,9 @@ const Page: FC = () => {
                           </li>
                           <li className="flex items-start gap-2">
                             <span className="text-yellow-500 mt-1">●</span>
-                            Bonus sambutan sebesar Rp50 ribu dengan transaksi hanya
-                            Rp1,- maksimal dalam 3 bulan sejak kartu disetujui.
+                            Bonus sambutan sebesar Rp50 ribu dengan transaksi
+                            hanya Rp1,- maksimal dalam 3 bulan sejak kartu
+                            disetujui.
                           </li>
                         </ul>
                       </div>
@@ -119,8 +119,7 @@ const Page: FC = () => {
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col items-center">
-              {/* <Cardplatinum /> */}
-              <p>Kartu Platinum</p>
+              <Cardplatinum />
               <div className="text-center py-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -178,8 +177,9 @@ const Page: FC = () => {
                           </li>
                           <li className="flex items-start gap-2">
                             <span className="text-[#000000] mt-1">●</span>
-                            Bonus sambutan sebesar Rp50 ribu dengan transaksi hanya
-                            Rp1,- maksimal dalam 3 bulan sejak kartu disetujui.
+                            Bonus sambutan sebesar Rp50 ribu dengan transaksi
+                            hanya Rp1,- maksimal dalam 3 bulan sejak kartu
+                            disetujui.
                           </li>
                         </ul>
                       </div>
@@ -198,10 +198,11 @@ const Page: FC = () => {
             </a>
           </div>
         </>
-      : <>
+      ) : (
+        <>
           <Tracker></Tracker>
         </>
-      }
+      )}
     </>
   );
 };

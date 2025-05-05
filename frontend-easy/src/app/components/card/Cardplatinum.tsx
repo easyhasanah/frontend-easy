@@ -6,9 +6,11 @@ import { useAuthStore } from "@/store/auth-store";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useCardStore } from "@/store/card-store";
-export default function Cardgold() {
+import { useUserStore } from "@/store/user-store";
+export default function Cardplatinum() {
   const [isVisible, setIsVisible] = useState(false);
   const cardStore = useCardStore();
+  const userStore = useUserStore();
   const token = useAuthStore((auth) => auth.token);
 
   const getCardData = async () => {
@@ -81,7 +83,7 @@ export default function Cardgold() {
           </div>
         </div>
         <div className="text-white/90 font-medium mb-2">
-          <span className=" py-1">Muhammad</span>
+          <span className=" py-1">{userStore.name}</span>
         </div>
         <div className="flex items-center space-x-2 tracking-widest mb-2">
           <span className="text-lg text-white">
