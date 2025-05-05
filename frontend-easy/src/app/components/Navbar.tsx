@@ -11,8 +11,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const handleLogout = () => {
     localStorage.removeItem("auth-store");
+    localStorage.removeItem("card-categories-store");
     localStorage.removeItem("card-store");
     localStorage.removeItem("submission-store");
+    localStorage.removeItem("user-store");
 
     router.push("/");
   };
@@ -102,7 +104,12 @@ export default function Navbar() {
           Formulir
         </Link>
         <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-          <Image src="/avatar.png" alt="User Avatar" width={40} height={40} />
+          <Image
+            src="/image/Avatar.png"
+            alt="User Avatar"
+            width={40}
+            height={40}
+          />
         </div>
         <div className="h-8 w-px bg-[#1EA39D]"></div>
 
@@ -152,7 +159,7 @@ export default function Navbar() {
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
                   <Image
-                    src="/avatar.png"
+                    src="/image/Avatar.png"
                     alt="User Avatar"
                     width={40}
                     height={40}
