@@ -11,6 +11,8 @@ import {
 import api from "@/lib/axios";
 import { useAuthStore } from "@/store/auth-store";
 import { useRouter } from "next/navigation";
+import { Check, AlertCircle, Info } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 
 const PinInput = () => {
   const [pin, setPin] = useState<string[]>(Array(6).fill(""));
@@ -23,6 +25,68 @@ const PinInput = () => {
 
   const pinRefs = useRef<(HTMLInputElement | null)[]>([]);
   const confirmPinRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const toastStyles = {
+    info: {
+      style: {
+        background: "#1EA39D",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#1EA39D",
+      },
+      icon: <Info color="#ffffff" size={20} />,
+    },
+    error: {
+      style: {
+        background: "#e74c3c",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#e74c3c",
+      },
+      icon: <AlertCircle color="#ffffff" size={20} />,
+    },
+    warning: {
+      style: {
+        background: "#f1c40f",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#f1c40f",
+      },
+      icon: <AlertCircle color="#ffffff" size={20} />,
+    },
+    success: {
+      style: {
+        background: "#2ecc71",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#2ecc71",
+      },
+      icon: <Check color="#ffffff" size={20} />,
+    },
+  };
+  const showToast = (
+    message: string,
+    type: "info" | "error" | "warning" | "success"
+  ) => {
+    toast(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: toastStyles[type].style,
+      icon: toastStyles[type].icon,
+    });
+  };
 
   useEffect(() => {
     const isPinComplete = pin.every((digit) => digit !== "");
@@ -141,11 +205,14 @@ const PinInput = () => {
             },
           }
         );
-        alert("PIN berhasil dibuat!");
+        showToast("PIN berhasil dibuat!", "success");
         router.push("/form/pin/success");
       } catch (error: any) {
         if (error.response) {
-          alert(error.response.data.detail || "Gagal membuat PIN.");
+          showToast(
+            error.response.data.detail || "Gagal membuat PIN.",
+            "error"
+          );
         } else {
           alert("Terjadi kesalahan jaringan.");
         }
@@ -165,6 +232,17 @@ const PinInput = () => {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center px-4">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="w-full max-w-md bg-white rounded-lg border border-[#00A39D] p-6">
         <h2 className="text-xl font-semibold text-center mb-6">
           Buat PIN Hasanah Card

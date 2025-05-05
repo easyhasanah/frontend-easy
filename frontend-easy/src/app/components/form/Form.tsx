@@ -540,7 +540,7 @@ const Form = () => {
             </form>
 
             <div className="mt-4 text-center text-xs text-gray-500">
-              © Hak cipta BNI Syariah
+              © Hak cipta BSI
             </div>
 
             <Dialog open={isTermsModalOpen} onOpenChange={setIsTermsModalOpen}>

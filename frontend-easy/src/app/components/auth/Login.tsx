@@ -9,10 +9,74 @@ import { Label } from "@/components/ui/Label";
 import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/store/auth-store";
+import { Check, AlertCircle, Info } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Login() {
   const router = useRouter();
   const authStore = useAuthStore();
+  const toastStyles = {
+    info: {
+      style: {
+        background: "#1EA39D",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#1EA39D",
+      },
+      icon: <Info color="#ffffff" size={20} />,
+    },
+    error: {
+      style: {
+        background: "#e74c3c",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#e74c3c",
+      },
+      icon: <AlertCircle color="#ffffff" size={20} />,
+    },
+    warning: {
+      style: {
+        background: "#f1c40f",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#f1c40f",
+      },
+      icon: <AlertCircle color="#ffffff" size={20} />,
+    },
+    success: {
+      style: {
+        background: "#2ecc71",
+        color: "#ffffff",
+        borderRadius: "4px",
+      },
+      progressStyle: {
+        background: "#2ecc71",
+      },
+      icon: <Check color="#ffffff" size={20} />,
+    },
+  };
+  const showToast = (
+    message: string,
+    type: "info" | "error" | "warning" | "success"
+  ) => {
+    toast(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: toastStyles[type].style,
+      icon: toastStyles[type].icon,
+    });
+  };
 
   const [formData, setFormData] = useState({
     username: "",
@@ -30,15 +94,34 @@ export default function Login() {
       const res = await api.post("/users/login", formData);
 
       authStore.setToken(res.data.token);
+      showToast("Login berhasil!", "success");
 
-      router.push("/dashboard");
-    } catch (error) {
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500);
+    } catch (error: any) {
       console.error("Error: ", error);
+
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Login gagal. Periksa kembali username dan password.";
+      showToast(errorMessage, "error");
     }
   };
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="flex flex-col items-center justify-center bg-teal-50 p-6 md:w-2/3">
         <div className="max-w-full">
           <Image

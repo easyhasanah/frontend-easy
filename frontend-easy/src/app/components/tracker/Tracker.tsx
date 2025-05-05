@@ -49,13 +49,13 @@ const Tracker = () => {
 
       {cardCategory > 6 ? (
         <>
-          <div className="w-full max-w-sm md:max-w-md mb-10">
+          <div className="text-left w-full max-w-sm md:max-w-md mb-10">
             <Cardplatinum></Cardplatinum>
           </div>
         </>
       ) : (
         <>
-          <div className="w-full max-w-sm md:max-w-md mb-10">
+          <div className="text-left w-full max-w-sm md:max-w-md mb-10">
             <Cardgold></Cardgold>
           </div>
         </>
