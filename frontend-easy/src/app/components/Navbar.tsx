@@ -13,6 +13,14 @@ export default function Navbar() {
     localStorage.removeItem("auth-store");
     localStorage.removeItem("card-store");
     localStorage.removeItem("submission-store");
+    localStorage.removeItem("all-transactions-store");
+    localStorage.removeItem("card-categories-store");
+    localStorage.removeItem("cashflow-store");
+    localStorage.removeItem("expense-history-store");
+    localStorage.removeItem("submission-store");
+    localStorage.removeItem("transaction-history-store");
+    localStorage.removeItem("transaction-type-store");
+    localStorage.removeItem("user-store");
 
     router.push("/");
   };

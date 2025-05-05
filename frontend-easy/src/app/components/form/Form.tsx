@@ -131,8 +131,6 @@ const Form = () => {
         }
       )
 
-      console.log("RES PREDICT: ", res.data)
-
       submissionStore.setCreditCardCategory(res.data.limit_category)
       submissionStore.setStatusPengajuan(res.data.rejection_reason)
       submissionStore.setTotalIncome(res.data.total_income)
@@ -146,8 +144,6 @@ const Form = () => {
           "Authorization": `Bearer ${token}`
         }
       })
-
-      console.log("RES ADD CARD: ", resAddCard.data)
 
       // if (!response.ok) {
       //   throw new Error(`Error: ${response.status}`);

@@ -7,11 +7,14 @@ import { useAuthStore } from "@/store/auth-store";
 import { useCardCategoriesStore } from "@/store/card-categories-store";
 import api from "@/lib/axios";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const FormSuccess = () =>  {
   const submissionStore = useSubmissionStore();
   const token = useAuthStore((state) => (state.token))
   const cardCategoriesStore = useCardCategoriesStore();
+  const cardCategory = useSubmissionStore((card) => (card.limit_category))
+  const router = useRouter()
 
   const getCardCategoriesData = async () => {
     try {
@@ -24,12 +27,15 @@ const FormSuccess = () =>  {
         },
       });
 
-      console.log('RES CARD CATEGORIES: ', response.data)
       cardCategoriesStore.setCardCategories(response.data)
 
     } catch (error) {
       console.error('error: ', error)
     }
+  }
+
+  const handleBackToDashboard = () => {
+    router.push("/dashboard")
   }
 
   useEffect(() => {
@@ -46,6 +52,24 @@ const FormSuccess = () =>  {
           untuk melakukan aktivasi.
         </p>
         
+        {cardCategory > 6
+        ? <>
+            <div className="flex justify-center mb-8">
+              <div className="w-80 h-48 rounded-xl relative overflow-hidden shadow-md">
+                {/* <Cardgold></Cardgold> */}
+                <p>Kartu Platinum</p>
+              </div>
+            </div>
+          </> 
+        : <>
+            <div className="flex justify-center mb-8">
+              <div className="w-80 h-48 rounded-xl relative overflow-hidden shadow-md">
+                {/* <Cardgold></Cardgold> */}
+                <p>Kartu Gold</p>
+              </div>
+            </div>
+          </> }
+
         {/* <div className="flex justify-center mb-8">
           <div className="w-80 h-48 rounded-xl relative overflow-hidden shadow-md">
             <Cardgold></Cardgold>
@@ -57,7 +81,7 @@ const FormSuccess = () =>  {
         </p>
         
         <div className="flex justify-center">
-          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2">
+          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2" onClick={handleBackToDashboard}>
             Kirim Kartu
           </Button>
         </div>
