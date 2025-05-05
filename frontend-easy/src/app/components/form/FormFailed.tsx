@@ -1,6 +1,16 @@
+"use client"
+
 import { Button } from "@/components/ui/Button";
+import { useSubmissionStore } from "@/store/submission-store";
+import { useRouter } from "next/navigation";
 
 const FormFailed = () => {
+  const router = useRouter()
+  const failedReason = useSubmissionStore((reason) => (reason.rejection_reason))
+
+  const handleBackToDashboard = () => {
+    router.push("/dashboard")
+  }
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-3xl mx-auto bg-[#ebf7f6] rounded-lg p-10">
@@ -8,8 +18,7 @@ const FormFailed = () => {
 
         <div className="items-center p-3">
           <p className="mb-5">
-            Mohon maaf, berdasarkan analisis terhadap profil Anda, permohonan
-            Anda untuk mengajukan Hasanah Card belum dapat disetujui.
+            Mohon maaf, berdasarkan analisis terhadap profil Anda, {failedReason}
           </p>
 
           <p>
@@ -19,8 +28,8 @@ const FormFailed = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-around mt-5 mx-4 md:mx-44 gap-4">
-          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2">
-            Kirim Kartu
+          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2" onClick={handleBackToDashboard}>
+            Kembali ke Beranda
           </Button>
           <Button className="bg-[#F8AD3C] hover:bg-[#df9c36] text-white px-8 py-2">
             Ajukan Mitraguna Online

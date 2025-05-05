@@ -20,7 +20,6 @@ export default function Dashboard() {
         },
       });
 
-      console.log("RES: ", res.data);
       submissionStore.setSubmission(res.data);
       const resUser = await api.get("users", {
         headers: {
@@ -30,9 +29,6 @@ export default function Dashboard() {
 
       submissionStore.setSubmission(res.data);
       userStore.setUsername(resUser.data.username);
-
-      console.log("RES: ", res.data);
-      console.log("RES USER: ", resUser.data);
 
       userStore.setName(resUser.data.name);
       userStore.setNik(res.data.nik);
