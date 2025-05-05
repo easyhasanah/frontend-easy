@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import Cardgold from "../card/Cardgold";
+import Cardplatinum from "../card/Cardplatinum";
 import { useSubmissionStore } from "@/store/submission-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useCardCategoriesStore } from "@/store/card-categories-store";
@@ -10,10 +11,9 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const FormSuccess = () =>  {
-  const submissionStore = useSubmissionStore();
-  const token = useAuthStore((state) => (state.token))
+  const token = useAuthStore((token) => (token.token))
   const cardCategoriesStore = useCardCategoriesStore();
-  const cardCategory = useSubmissionStore((card) => (card.limit_category))
+  const submissionStore = useSubmissionStore()
   const router = useRouter()
 
   const getCardCategoriesData = async () => {
@@ -34,8 +34,8 @@ const FormSuccess = () =>  {
     }
   }
 
-  const handleBackToDashboard = () => {
-    router.push("/dashboard")
+  const handleToFormAddress = () => {
+    router.push("/form/address")
   }
 
   useEffect(() => {
@@ -52,36 +52,29 @@ const FormSuccess = () =>  {
           untuk melakukan aktivasi.
         </p>
         
-        {cardCategory > 6
+        {submissionStore.limit_category > 6
         ? <>
             <div className="flex justify-center mb-8">
               <div className="w-80 h-48 rounded-xl relative overflow-hidden shadow-md">
-                {/* <Cardgold></Cardgold> */}
-                <p>Kartu Platinum</p>
+                <Cardplatinum></Cardplatinum>
               </div>
             </div>
           </> 
         : <>
             <div className="flex justify-center mb-8">
               <div className="w-80 h-48 rounded-xl relative overflow-hidden shadow-md">
-                {/* <Cardgold></Cardgold> */}
-                <p>Kartu Gold</p>
+                <Cardgold></Cardgold>
               </div>
             </div>
-          </> }
-
-        {/* <div className="flex justify-center mb-8">
-          <div className="w-80 h-48 rounded-xl relative overflow-hidden shadow-md">
-            <Cardgold></Cardgold>
-          </div>
-        </div> */}
+          </> 
+        }
         
         <p className="text-center mb-8">
             Anda mendapatkan <span className="font-bold">BSI Hasanah Card {cardCategoriesStore.type}</span> dengan limit sebesar <span className="font-bold">Rp {cardCategoriesStore.limit.toLocaleString('id-ID')},00</span>.
         </p>
         
         <div className="flex justify-center">
-          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2" onClick={handleBackToDashboard}>
+          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2" onClick={handleToFormAddress}>
             Kirim Kartu
           </Button>
         </div>
