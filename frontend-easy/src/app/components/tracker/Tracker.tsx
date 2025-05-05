@@ -2,8 +2,40 @@
 
 import { Button } from "@/components/ui/Button"
 import Cardgold from "../card/Cardgold";
+import Cardplatinum from "../card/Cardplatinum";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/auth-store";
+import api from "@/lib/axios";
+import { useSubmissionStore } from "@/store/submission-store";
 
 const Tracker = () => {
+  const router = useRouter()
+  const [pin, setPin] = useState('')
+  const token = useAuthStore((token) => (token.token))
+  const cardCategory = useSubmissionStore((card) => (card.limit_category))
+
+  const getPin = async () => {
+    try {
+      const res = await api.get("card", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+
+      setPin(res?.data?.pin ?? '')
+    } catch (error) {
+      console.error('error: ', error)
+    }
+  }
+
+  const handlePinPage = () => {
+    router.push('/form/pin')
+  };
+
+  useEffect(() => {
+    getPin();
+  }, []);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
       <h2 className="text-lg md:text-xl font-semibold mb-2">
@@ -13,9 +45,18 @@ const Tracker = () => {
         Berikut merupakan detail status pengajuan Hasanah Card Anda,
       </p>
 
-      <div className="w-full max-w-sm md:max-w-md mb-10">
-        <Cardgold></Cardgold>
-      </div>
+      {cardCategory > 6
+        ? <>
+            <div className="w-full max-w-sm md:max-w-md mb-10">
+              <Cardplatinum></Cardplatinum>
+            </div>
+          </> 
+        : <>
+            <div className="w-full max-w-sm md:max-w-md mb-10">
+              <Cardgold></Cardgold>
+            </div>
+          </> 
+        }
 
       <div className="w-full max-w-4xl mb-6">
         <div className="relative flex justify-between items-start text-sm">
@@ -23,7 +64,7 @@ const Tracker = () => {
             { title: "Pengajuan", date: "Rabu, 1 Januari", active: true },
             { title: "Disetujui/Ditolak", date: "Rabu, 1 Januari", active: true },
             { title: "Pengiriman", date: "Rabu, 1 Januari", active: true },
-            { title: "Aktivasi", date: "Senin, 16 Januari", active: false },
+            { title: "Aktivasi", date: "Senin, 16 Januari", active: pin === "" ? false : true },
           ].map((step, i, arr) => (
             <div key={i} className="flex flex-col items-center w-full relative">
               {/* Horizontal Line */}
@@ -45,9 +86,18 @@ const Tracker = () => {
         </div>
       </div>
 
-      <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-6 py-2">
-        Aktivasi Kartu
-      </Button>
+      {pin === ""
+      ? <>
+          <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-6 py-2" onClick={handlePinPage}>
+            Aktivasi Kartu
+          </Button>
+        </>
+      : <>
+          <Button className="bg-[#1EA39D] hover:bg-[#1EA39D] text-white px-6 py-2">
+            Selamat, Hasanah Card Anda sudah berhasil diaktivasi.
+          </Button>
+        </>
+      }
     </div>
   );
 };

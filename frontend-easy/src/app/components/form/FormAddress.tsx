@@ -3,8 +3,14 @@
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
 const FormAddress = () => {
+  const router = useRouter()
+
+  const handleToSuccessPage = () => {
+    router.push('/form/address-success')
+  }
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-20">
       <h2 className="text-center text-xl font-semibold mb-6">
@@ -44,7 +50,7 @@ const FormAddress = () => {
       </div>
 
       <div className="text-center">
-        <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2">
+        <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2" onClick={handleToSuccessPage}>
           Selanjutnya
         </Button>
       </div>

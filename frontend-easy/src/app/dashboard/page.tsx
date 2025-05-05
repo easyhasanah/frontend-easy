@@ -52,8 +52,7 @@ const Page: FC = () => {
           <Dashboard />
           <div className="max-w-screen-lg mx-auto flex flex-col md:flex-row items-start justify-center gap-6 px-4 py-8 mt-4 md:mt-15">
             <div className="w-full md:w-1/2 flex flex-col items-center">
-              {/* <Cardgold /> */}
-              <p>Kartu Gold</p>
+              <Cardgold />
               <div className="text-center py-4">
                 <Dialog>
                   <DialogTrigger asChild>
@@ -119,8 +118,7 @@ const Page: FC = () => {
             </div>
 
             <div className="w-full md:w-1/2 flex flex-col items-center">
-              {/* <Cardplatinum /> */}
-              <p>Kartu Platinum</p>
+              <Cardplatinum />
               <div className="text-center py-4">
                 <Dialog>
                   <DialogTrigger asChild>

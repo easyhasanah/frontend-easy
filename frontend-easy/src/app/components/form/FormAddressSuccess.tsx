@@ -2,8 +2,14 @@
 
 import { Button } from "@/components/ui/Button";
 import { Phone } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const FormAddressSuccess = () => {
+  const router = useRouter()
+  
+  const handleToDashboard = () => {
+    router.push('/dashboard')
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="max-w-2xl w-full p-6 bg-[#ebf7f6] shadow-md rounded-lg text-center">
@@ -16,7 +22,7 @@ const FormAddressSuccess = () => {
           Lihat detail status pengajuan Hasanah Card Anda pada halaman beranda.
         </p>
 
-        <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2 mb-3">
+        <Button className="bg-[#1EA39D] hover:bg-teal-600 text-white px-8 py-2 mb-3" onClick={handleToDashboard}>
           OK
         </Button>
 

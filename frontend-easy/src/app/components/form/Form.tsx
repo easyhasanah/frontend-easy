@@ -9,7 +9,10 @@ import { useAuthStore } from "@/store/auth-store";
 import { useSubmissionStore } from "@/store/submission-store";
 import { useUserStore } from "@/store/user-store";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Check, AlertCircle, Info } from "lucide-react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Form = () => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
@@ -20,13 +23,75 @@ const Form = () => {
   const [totalIncome, setTotalIncome] = useState(0);
   const [predictionResult, setPredictionResult] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  
   const token = useAuthStore((state) => (state.token))
   const router = useRouter()
 
   const submissionStore = useSubmissionStore()
   const userStore = useUserStore()
   
+  // Custom toast styles
+  const toastStyles = {
+    info: {
+      style: {
+        background: '#1EA39D',
+        color: '#ffffff',
+        borderRadius: '4px',
+      },
+      progressStyle: {
+        background: '#1EA39D'
+      },
+      icon: <Info color="#ffffff" size={20} />
+    },
+    error: {
+      style: {
+        background: '#e74c3c',
+        color: '#ffffff',
+        borderRadius: '4px',
+      },
+      progressStyle: {
+        background: '#e74c3c'
+      },
+      icon: <AlertCircle color="#ffffff" size={20} />
+    },
+    warning: {
+      style: {
+        background: '#f1c40f',
+        color: '#ffffff',
+        borderRadius: '4px',
+      },
+      progressStyle: {
+        background: '#f1c40f'
+      },
+      icon: <AlertCircle color="#ffffff" size={20} />
+    },
+    success: {
+      style: {
+        background: '#2ecc71',
+        color: '#ffffff',
+        borderRadius: '4px',
+      },
+      progressStyle: {
+        background: '#2ecc71'
+      },
+      icon: <Check color="#ffffff" size={20} />
+    }
+  };
+
+  const showToast = (message: string, type: 'info' | 'error' | 'warning' | 'success') => {
+    toast(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: toastStyles[type].style,
+      icon: toastStyles[type].icon
+    });
+  };
+
   const handleCheckboxClick = () => {
     if (!termsAccepted) {
       setIsTermsModalOpen(true);
@@ -41,7 +106,6 @@ const Form = () => {
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
@@ -55,17 +119,17 @@ const Form = () => {
 
   const processFile = async (fileToProcess: File) => {
     if (!fileToProcess) {
-      alert("Silakan pilih file terlebih dahulu");
+      showToast("Silahkan pilih file terlebih dahulu", "error");
       return;
     }
 
     if (fileToProcess.type !== "application/pdf") {
-      alert("Hanya file PDF yang diperbolehkan");
+      showToast("Hanya file PDF yang diperbolehkan", "error");
       return;
     }
 
     if (fileToProcess.size > 10 * 1024 * 1024) { // 10MB in bytes
-      alert("Ukuran file melebihi 10MB");
+      showToast("Ukuran file melebihi 10MB", "error");
       return;
     }
 
@@ -74,12 +138,10 @@ const Form = () => {
     formData.append("file", fileToProcess);
 
     try {
-      const response = await fetch("http://192.168.23.50:8000/api/submissions/read_pdf", {
+      const response = await fetch("http://127.0.0.1:8000/api/submissions/read_pdf", {
         method: "POST",
         body: formData,
       });
-
-      // const res = await api.post("submissions/read_pdf")
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -88,10 +150,10 @@ const Form = () => {
       const income = await response.json();
       setTotalIncome(income);
       submissionStore.setTotalIncome(income); // Assuming you have this function in your store
-      alert("Berhasil mengunggah file dan memperbarui penghasilan");
+      showToast("Berhasil mengunggah file dan memperbarui penghasilan", "success");
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("Gagal mengunggah file. Silakan coba lagi.");
+      showToast("Gagal mengunggah file. Silakan coba lagi.", "error");
     } finally {
       setLoading(false);
     }
@@ -99,12 +161,12 @@ const Form = () => {
 
   const handlePredictCategory = async () => {
     if (!file) {
-      alert("Silakan pilih file terlebih dahulu");
+      showToast("Silakan pilih file terlebih dahulu", "warning");
       return;
     }
 
     if (!termsAccepted) {
-      alert("Silakan setujui syarat dan ketentuan terlebih dahulu");
+      showToast("Silakan setujui syarat dan ketentuan terlebih dahulu", "warning");
       return;
     }
 
@@ -114,15 +176,6 @@ const Form = () => {
     formData.append("file", file);
 
     try {
-      // const response = await fetch("http://127.0.0.1:8000/api/submissions/predict_category", {
-      //   method: "POST",
-      //   body: formData,
-      //   headers: {
-      //     // Include authorization if your API requires it
-      //     "Authorization": `Bearer ${token}`
-      //   },
-      // });
-
       const res = await api.post("/submissions/predict", formData,
         {
           headers: {
@@ -145,18 +198,6 @@ const Form = () => {
         }
       })
 
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.status}`);
-      // }
-
-      // const result = await response.json();
-      // setPredictionResult(result);
-
-      // Optionally update your store with the prediction results
-      // if (submissionStore.setStatusPengajuan) {
-      //   submissionStore.setStatusPengajuan(result.rejection_reason);
-      // }
-
       // Scroll to the results section
       setTimeout(() => {
         window.scrollTo({
@@ -164,6 +205,8 @@ const Form = () => {
           behavior: 'smooth'
         });
       }, 100);
+
+      showToast("Berhasil memproses pengajuan", "info");
 
       if(res.data.limit_category == 0){
         router.push("/form/failed")
@@ -173,7 +216,7 @@ const Form = () => {
 
     } catch (error) {
       console.error("Error predicting category:", error);
-      alert("Gagal melakukan prediksi kategori. Silakan coba lagi.");
+      showToast("Gagal melakukan prediksi kategori. Silakan coba lagi.", "error");
     } finally {
       setPredictLoading(false);
     }
@@ -186,6 +229,19 @@ const Form = () => {
   return (
     <>
       <div className="min-h-screen bg-white">
+        {/* Toast Container */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        
         <main className="container mx-auto px-4 py-8">
           <h1 className="text-2xl font-bold text-center mb-8">
             Formulir Pengajuan Hasanah Card
@@ -399,10 +455,10 @@ const Form = () => {
               <div className="mt-8 flex justify-center">
                 <Button
                   className="bg-[#1EA39D] hover:bg-teal-600 text-white w-full md:w-1/3"
-                  disabled={!termsAccepted || !totalIncome || predictLoading}
+                  disabled={!termsAccepted || predictLoading}
                   onClick={handlePredictCategory}
                 >
-                  Ajukan
+                  {predictLoading ? "Memproses..." : "Ajukan"}
                 </Button>
               </div>
             </form>

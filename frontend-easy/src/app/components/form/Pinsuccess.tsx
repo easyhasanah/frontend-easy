@@ -29,7 +29,7 @@ const PinSuccess = () => {
         </p>
         <Button
           onClick={handleClick}
-          className="bg-[#1EA39D] hover:cursor-pointer hover:bg-teal-600 text-white px-8 py-2 mb-3"
+          className="bg-[#1EA39D] hover:cursor-pointer hover:bg-teal-600 text-white px-8 py-2 mb-3 mt-3"
         >
           OK
         </Button>
