@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth-store";
 import api from "@/lib/axios";
 import { useSubmissionStore } from "@/store/submission-store";
+import { useUserStore } from "@/store/user-store";
 
 const Tracker = () => {
   const router = useRouter();
   const [pin, setPin] = useState("");
   const token = useAuthStore((token) => token.token);
   const cardCategory = useSubmissionStore((card) => card.limit_category);
+  const userStore = useUserStore();
 
   const getPin = async () => {
     try {
