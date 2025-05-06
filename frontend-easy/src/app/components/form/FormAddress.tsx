@@ -17,7 +17,7 @@ const FormAddress = () => {
         Formulir Alamat Pengiriman Kartu
       </h2>
 
-      <div className="flex items-center space-x-2 mb-4">
+      {/* <div className="flex items-center space-x-2 mb-4">
         <Checkbox id="same-as-ktp" defaultChecked className="border-[#1EA39D] text-teal-500 rounded-sm data-[state=checked]:bg-[#1EA39D]" />
         <label
           htmlFor="same-as-ktp"
@@ -25,7 +25,7 @@ const FormAddress = () => {
         >
           Alamat pengiriman sesuai dengan alamat di KTP
         </label>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <Input placeholder="Nama Depan" />
