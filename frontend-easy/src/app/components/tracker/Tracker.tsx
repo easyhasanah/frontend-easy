@@ -64,16 +64,16 @@ const Tracker = () => {
       <div className="w-full max-w-4xl mb-6">
         <div className="relative flex justify-between items-start text-sm">
           {[
-            { title: "Pengajuan", date: "Rabu, 1 Januari", active: true },
+            { title: "Pengajuan", date: "Selasa, 6 Mei", active: true },
             {
               title: "Disetujui/Ditolak",
-              date: "Rabu, 1 Januari",
+              date: "Selasa, 6 Mei",
               active: true,
             },
-            { title: "Pengiriman", date: "Rabu, 1 Januari", active: true },
+            { title: "Pengiriman", date: "Jumat, 9 Mei", active: true },
             {
               title: "Aktivasi",
-              date: "Senin, 16 Januari",
+              date: "JUmat, 9 Mei",
               active: pin === "" ? false : true,
             },
           ].map((step, i, arr) => (
