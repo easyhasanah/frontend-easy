@@ -140,7 +140,7 @@ export default function Navbar() {
             <Link
               href="/dashboard"
               className={`text-base px-4 py-2 ${
-                pathname === "/"
+                pathname === "/dashboard"
                   ? "text-teal-500 font-medium"
                   : "text-gray-700 hover:text-teal-500"
               }`}
