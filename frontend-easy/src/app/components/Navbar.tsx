@@ -45,7 +45,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full py-4 px-6 flex items-center justify-between border-b border-teal-500 relative">
-      <Link href="/" className="flex items-center z-20">
+      <Link href="/dashboard" className="flex items-center z-20">
         <Image
           src="/image/Logo_EH.svg"
           alt="Easy Hasanah Logo"
@@ -93,7 +93,7 @@ export default function Navbar() {
         <Link
           href="/dashboard"
           className={`text-lg ${
-            pathname === "/"
+            pathname === "/dashboard"
               ? "text-teal-500 font-medium"
               : "text-gray-500 hover:text-teal-500"
           } transition-colors`}
@@ -101,9 +101,9 @@ export default function Navbar() {
           Beranda
         </Link>
         <Link
-          href="#"
+          href="/form/initial"
           className={`text-lg ${
-            pathname === "/formulir"
+            pathname === "/form/initial"
               ? "text-teal-500 font-medium"
               : "text-gray-500 hover:text-teal-500"
           } transition-colors`}
@@ -138,7 +138,7 @@ export default function Navbar() {
         <div className="md:hidden fixed h-[35vh] inset-0 z-10 bg-white pt-20 px-6">
           <div className="flex flex-col space-y-1">
             <Link
-              href="/"
+              href="/dashboard"
               className={`text-base px-4 py-2 ${
                 pathname === "/"
                   ? "text-teal-500 font-medium"
@@ -149,9 +149,9 @@ export default function Navbar() {
               Beranda
             </Link>
             <Link
-              href="/formulir"
+              href="/form/initial"
               className={`text-base px-4 py-2 ${
-                pathname === "/formulir"
+                pathname === "/form/initial"
                   ? "text-teal-500 font-medium"
                   : "text-gray-700 hover:text-teal-500"
               }`}
